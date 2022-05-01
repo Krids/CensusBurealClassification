@@ -1,0 +1,7 @@
+[core]
+    remote = s3-remote
+    analytics = false
+['remote "localremote"']
+    url = ../../local_remote
+['remote "s3-remote"']
+    url = s3://census-bureal-classification/dvc/

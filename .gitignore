@@ -1,0 +1,9 @@
+# VS Code Files
+.ipynb_checkpoints/
+.vscode/
+__pycache__
+.pytest_cache
+
+aws/
+*.zip
+aws.txt
