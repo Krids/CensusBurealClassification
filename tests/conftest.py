@@ -10,9 +10,8 @@ import pandas as pd
 import great_expectations as ge
 from sklearn.model_selection import train_test_split
 
-from src.utils.project_paths import DATA_RAW, DATA_PROCESSED
-# from pipeline.data import get_clean_data
-
+from src.utils.project_paths import DATA_RAW
+from src.etl.etl import Etl
 
 @pytest.fixture(scope='session')
 def data():
@@ -21,8 +20,9 @@ def data():
     """
     if not os.path.exists(DATA_RAW):
         pytest.fail(f"Data not found at path: {DATA_RAW}")
-
-    X_df, y_df = get_clean_data(DATA_RAW)
+    
+    etl = Etl()
+    X_df, y_df = etl.get_clean_data(os.path.join(DATA_RAW, 'census.csv'))
     X_df['salary'] = y_df
     X_df['salary'] = X_df['salary'].map({1: ' >50k', 0: ' <=50k'})
 
@@ -44,7 +44,7 @@ def sample_data():
     if not os.path.exists(DATA_RAW):
         pytest.fail(f"Data not found at path: {DATA_RAW}")
 
-    data_df = pd.read_csv(DATA_RAW, nrows=10)
+    data_df = pd.read_csv(os.path.join(DATA_RAW, 'census.csv'), nrows=10)
 
 
     columns = data_df.columns

@@ -1,0 +1,8 @@
+root - INFO - fbeta : 0.6552244534113341
+precision : 0.8257249497559576
+recall : 0.4609713095047283
+root - INFO - train_precision: 0.8257249497559576, train_recall: 0.4609713095047283, train_fbeta: 0.6552244534113341
+root - INFO - fbeta : 0.643100303951368
+precision : 0.8246225319396051
+recall : 0.44375
+root - INFO - test_precision: 0.8246225319396051, test_recall: 0.44375, test_fbeta: 0.643100303951368

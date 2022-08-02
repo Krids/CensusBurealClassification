@@ -7,14 +7,14 @@ Date: 01/05/2022
 
 import os
 import sys
-import logging
+import logging as log
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from src.utils.project_paths import IMAGES_PATH
+from src.utils.project_paths import IMAGES_PATH, LOGS_PATH
 
-from model.model_training import ModelTraining
+from src.model.model_training import ModelTraining
 
 sns.set()
 
@@ -22,10 +22,22 @@ class ModelSliceEvaluation:
 
     def __init__(self) -> None:
         self.model_training = ModelTraining()
+        log.basicConfig(
+            filename= os.path.join(LOGS_PATH, 'slice_evalutation.log'),
+            level=log.INFO,
+            filemode='w',
+            format='%(name)s - %(levelname)s - %(message)s')
 
     def slice_metrics(self, column, X, y_true, y_pred):
         """
-        Calculates column metrics
+        Calculates metrics on a slice of data for a specific column
+        Args:
+            column (str): Column name representing a feature
+            X (pandas dataframe): data features
+            y_true ([type]): data true labels
+            y_pred ([type]): data predicted labels
+        Returns:
+            pandas dataframe: Dataframe with metrics for each category
         """
         df = pd.concat([X[column].copy(), y_true], axis=1)
         df['salary_pred'] = y_pred
@@ -37,7 +49,7 @@ class ModelSliceEvaluation:
                 df[df[column] == categ]['salary']
             )
             metrics.append([categ, precision, recall, fbeta])
-            print(f"[INFO] {categ}: Precision = {precision:.3f}, Recall = {recall:.3f}, F-Beta = {fbeta:.3f}")
+            log.info(f"[INFO] {categ}: Precision = {precision:.3f}, Recall = {recall:.3f}, F-Beta = {fbeta:.3f}")
 
         return pd.DataFrame(
             metrics,
@@ -49,8 +61,21 @@ class ModelSliceEvaluation:
 
     def evaluate_slices(self, file, model_pipe, column, X, y, split):
         """
-        model on a slice of data
+        Evaluting model on a slice of data for a specific column
+        and data split and saving the results to a file
+        Args:
+            file (file): file object
+            model_pipe (sklearn pipeline/model): sklearn model or pipeline
+            column (str): Column name representing a feature
+            X (pandas dataframe): data features
+            y (pandas series): data labels
+            split (str): train or test split
+        Returns:
+            None
         """
+
+        log.info(f"Evaluating {column} on slice of {split} data")
+
         y_pred = self.model_training.inference(model_pipe, X)
         slice_df = self.slice_metrics(column, X, y, y_pred)
 
@@ -67,7 +92,14 @@ class ModelSliceEvaluation:
 
     def plot_slice_metrics(self, df, title, save_path=None):
         """
-        metrics in a bar plot
+        Plots slice metrics in a bar plot using the dataframe from
+        slice_metrics function
+        Args:
+            df (pandas dataframe): dataframe of metrics and category
+            title (str): Plot title
+            save_path (str, optional): The plot save path. Defaults to None.
+        Returns:
+            None
         """
         df = df.melt(id_vars=['Category'], value_vars=['Precision', 'Recall', 'F1'])
 

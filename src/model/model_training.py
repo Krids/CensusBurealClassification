@@ -6,22 +6,28 @@ Date: 01/05/2022
 """
 
 import os
+import logging as log
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV
 import pickle
-from etl.etl import Etl
+from src.etl.etl import Etl
 
-from utils.project_paths import DATA_PROCESSED, MODELS_PATH
+from src.utils.project_paths import DATA_PROCESSED, MODELS_PATH, LOGS_PATH
 
 class ModelTraining:
 
     def __init__(self) -> None:
         self.etl = Etl()
+        log.basicConfig(
+            filename= os.path.join(LOGS_PATH, 'training.log'),
+            level=log.INFO,
+            filemode='w',
+            format='%(name)s - %(levelname)s - %(message)s')
 
-    def train_model(self, X_train, y_train, filepath=os.path.join(MODELS_PATH, "/gbclassifier.pkl")):
+    def train_model(self, X_train, y_train, filepath=os.path.join(MODELS_PATH, "gbclassifier.pkl")):
         """
         Trains a machine learning model and returns it.
         Inputs
@@ -67,7 +73,7 @@ class ModelTraining:
         fbeta = fbeta_score(y, preds, beta=0.7, zero_division=1)
         precision = precision_score(y, preds, zero_division=1)
         recall = recall_score(y, preds, zero_division=1)
-        print(f"fbeta : {fbeta}\nprecision : {precision}\nrecall : {recall}")
+        log.info(f"fbeta : {fbeta}\nprecision : {precision}\nrecall : {recall}")
         return precision, recall, fbeta
 
 
@@ -91,9 +97,6 @@ class ModelTraining:
     def execute(self):
         # Script to train machine learning model.
 
-
-        # Add the necessary imports for the starter code.
-
         # Add code to load in the data.
         data = pd.read_csv(os.path.join(DATA_PROCESSED, "census_cleaned.csv"))
 
@@ -103,18 +106,18 @@ class ModelTraining:
         cat_features = [
             "workclass",
             "education",
-            "marital-status",
+            "marital_status",
             "occupation",
             "relationship",
             "race",
             "sex",
-            "native-country",
+            "native_country",
         ]
         X_train, y_train, encoder, lb = self.etl.process_data(
             train, categorical_features=cat_features, label="salary", training=True
         )
-        pickle.dump(lb, open(os.path.join(MODELS_PATH, 'lb.pkl', "wb")))
-        pickle.dump(encoder, open(os.path.join(MODELS_PATH, 'encoder.pkl', 'wb')))
+        pickle.dump(lb, open(os.path.join(MODELS_PATH, 'lb.pkl'), "wb"))
+        pickle.dump(encoder, open(os.path.join(MODELS_PATH, 'encoder.pkl'), 'wb'))
 
         # Proces the test data with the process_data function.
         X_test, y_test, encoder, lb = self.etl.process_data(
@@ -124,10 +127,10 @@ class ModelTraining:
         classifier = self.train_model(X_train, y_train)
         y_train_pred = self.inference(classifier, X_train)
         train_precision, train_recall, train_fbeta = self.compute_model_metrics(y_train, y_train_pred)
-        print("train_precision: {train_precision}, train_recall: {train_recall}, train_fbeta: {train_fbeta}".format(
+        log.info("train_precision: {train_precision}, train_recall: {train_recall}, train_fbeta: {train_fbeta}".format(
             train_precision=train_precision, train_recall=train_recall, train_fbeta=train_fbeta))
 
         y_test_pred = self.inference(classifier, X_test)
         test_precision, test_recall, test_fbeta = self.compute_model_metrics(y_test, y_test_pred)
-        print("test_precision: {test_precision}, test_recall: {test_recall}, test_fbeta: {test_fbeta}".format(
+        log.info("test_precision: {test_precision}, test_recall: {test_recall}, test_fbeta: {test_fbeta}".format(
             test_precision=test_precision, test_recall=test_recall, test_fbeta=test_fbeta))
