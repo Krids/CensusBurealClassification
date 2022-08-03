@@ -45,4 +45,4 @@ jobs:
         dvc pull 
     - name: Test with pytest # Final action which runs pytest. If any test fails, then this Action fails
       run: |
-        pytest src/tests -vv
+        pytest tests -vv
