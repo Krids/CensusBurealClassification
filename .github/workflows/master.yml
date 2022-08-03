@@ -3,12 +3,6 @@
 
 name: Census Bureal CI
 
-# on:
-#   push:
-#     branches: [ master ]
-#   pull_request:
-#     branches: [ master ]
-
 on: [push]
 
 permissions:
@@ -20,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8] # You can build against multiple Python versions
+        python-version: ["3.8"] # You can build against multiple Python versions
 
     steps:
     - uses: actions/checkout@v2 # Calling a pre-built GitHub Action which allows your Action to access your repository
     - name: Set up Python ${{ matrix.python-version }} # Name of an action that sets up Python
-      uses: actions/setup-python@v2 # A pre-built GitHub Action that sets up a Python environment
+      uses: actions/setup-python@v4 # A pre-built GitHub Action that sets up a Python environment
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies 
