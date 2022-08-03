@@ -30,9 +30,9 @@ class Etl:
         data_df = data_df[~data_df.duplicated()]
         data_df.columns = data_df.columns.str.strip()
         data_df = data_df.applymap(
-            lambda s: s.lower() if isinstance(s, str) else s)
+            lambda s: s.lower().strip() if isinstance(s, str) else s)
 
-        data_df['salary'] = data_df['salary'].map({' >50k': 1, ' <=50k': 0})
+        data_df['salary'] = data_df['salary'].map({'>50k': 1, '<=50k': 0})
 
         y_df = data_df.pop('salary')
         x_df = data_df

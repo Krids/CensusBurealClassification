@@ -5,54 +5,18 @@ Author: Felipe Lana Machado
 Date: 01/08/2022
 """
 
+import os
 import joblib
 import pandas as pd
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, StandardScaler
 
 from src.utils import config
 from src.etl.etl import Etl
+from src.utils.project_paths import MODELS_PATH, DATA_RAW
 from src.model.model_training import ModelTraining
 
 etl = Etl()
 model_training = ModelTraining()
-
-
-def test_model_pipeline():
-    """
-    Tests if model pipeline is created with correct steps
-    """
-    feats = config.FEATURES
-
-    model_pipe = get_model_pipeline(config.MODEL, feats)
-
-    assert model_pipe[0].transformers[0][1] == 'drop', "First step: column transformer != drop"
-    assert model_pipe[0].transformers[0][2] == feats[
-        'drop'], f"{feats['drop']} only should be dropped"
-
-    assert isinstance(model_pipe[0].transformers[1][1],
-                      Pipeline), "Second step: column transformer != Pipeline"
-    assert isinstance(model_pipe[0].transformers[1][1][0],
-                      SimpleImputer), "Second step: column transformer Pipeline != first step: SimpleImputer"
-    assert (
-        isinstance(model_pipe[1], LogisticRegression) & isinstance(
-            model_pipe[0].transformers[1][1][1], OneHotEncoder)
-    ) or (
-        isinstance(model_pipe[1], RandomForestClassifier) & isinstance(
-            model_pipe[0].transformers[1][1][1], OrdinalEncoder)
-    ), "Second step: column transformer Pipeline != second step: OHE for LogisticRegression or LE for RandomForestClassifier"
-    assert model_pipe[0].transformers[1][2] == feats[
-        'categorical'], f"{feats['categorical']} only should be included in column transformer second step"
-
-    assert isinstance(model_pipe[0].transformers[2][1],
-                      StandardScaler), "Third step of column transformer should be a StandardScaler"
-    assert model_pipe[0].transformers[2][2] == feats[
-        'numeric'], f"{feats['numeric']} only should be included in column transformer third step"
-
 
 def test_model_output_shape(sample_data: pd.DataFrame):
     """
@@ -61,17 +25,16 @@ def test_model_output_shape(sample_data: pd.DataFrame):
         sample_data (pd.DataFrame): Sample data to be tested
     """
     X_train, X_test, y_train, _ = sample_data
-    model = get_model_pipeline(config.MODEL, config.FEATURES)
 
-    model = model_training.train_model(model, X_train, y_train, {})
+    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
 
     assert X_train.shape[
-        1] == 14, f"Train data number of columns should be 14 not {X_train.shape[1]}"
+        1] == 108, f"Train data number of columns should be 108 not {X_train.shape[1]}"
     assert X_test.shape[
-        1] == 14, f"Test data number of columns should be 14 not {X_test.shape[1]}"
+        1] == 108, f"Test data number of columns should be 108 not {X_test.shape[1]}"
     assert y_train_pred.shape[0] == X_train.shape[
         0], f"Predictions output shape {y_train_pred.shape[0]} is incorrect does not match input shape {X_train.shape[0]}"
     assert y_test_pred.shape[0] == X_test.shape[
@@ -85,9 +48,9 @@ def test_model_output_range(sample_data: pd.DataFrame):
         sample_data (pd.DataFrame): [description]
     """
     X_train, X_test, y_train, _ = sample_data
-    model = get_model_pipeline(config.MODEL, config.FEATURES)
 
-    model = model_training.train_model(model, X_train, y_train, {})
+
+    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
@@ -102,12 +65,32 @@ def test_model_evaluation():
     """
     Test evaluated model metrics are above certain thresholds
     """
-    X, y = etl.get_clean_data(config.DATA_DIR)
+    X, y = etl.get_clean_data(os.path.join(DATA_RAW, 'census.csv'))
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, random_state=config.RANDOM_STATE, stratify=y)
+    cat_features = [
+            "workclass",
+            "education",
+            "marital_status",
+            "occupation",
+            "relationship",
+            "race",
+            "sex",
+            "native_country",
+        ]
+    
+    data = pd.concat([X, y], axis=1)
 
-    model = joblib.load(config.MODEL_DIR)
+    train, test = train_test_split(data, test_size=0.3, random_state=12)
+    
+    X_train, y_train, encoder, lb = etl.process_data(
+            train, categorical_features=cat_features, label="salary", training=True
+        )
+
+    X_test, y_test, encoder, lb = etl.process_data(
+            test, categorical_features=cat_features, label="salary", training=False, encoder=encoder, lb=lb
+        )
+    
+    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
@@ -117,10 +100,10 @@ def test_model_evaluation():
     pre_test, rec_test, f1_test = model_training.compute_model_metrics(
         y_test_pred, y_test)
 
-    assert pre_train > 0.7, "Train precision should be above 0.85"
-    assert rec_train > 0.85, "Train recall should be above 0.85"
-    assert f1_train > 0.58, "Train f1 should be above 0.85"
+    assert pre_train > 0.44, "Train precision should be above 0.45"
+    assert rec_train > 0.81, "Train recall should be above 0.82"
+    assert f1_train > 0.52, "Train f1 should be above 0.53"
 
-    assert pre_test > 0.68, "Test precision should be above 0.82"
-    assert rec_test > 0.82, "Test recall should be above 0.82"
-    assert f1_test > 0.56, "Test f1 should be above 0.80"
+    assert pre_test > 0.45, "Test precision should be above 0.46"
+    assert rec_test > 0.82, "Test recall should be above 0.83"
+    assert f1_test > 0.53, "Test f1 should be above 0.54"

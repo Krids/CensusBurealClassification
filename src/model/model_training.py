@@ -8,6 +8,7 @@ Date: 01/05/2022
 import os
 import logging as log
 import pandas as pd
+import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.ensemble import GradientBoostingClassifier
@@ -15,6 +16,7 @@ from sklearn.model_selection import GridSearchCV
 import pickle
 from src.etl.etl import Etl
 
+from src.utils import config
 from src.utils.project_paths import DATA_PROCESSED, MODELS_PATH, LOGS_PATH
 
 class ModelTraining:
@@ -26,6 +28,18 @@ class ModelTraining:
             level=log.INFO,
             filemode='w',
             format='%(name)s - %(levelname)s - %(message)s')
+
+    def get_trained_model(self, filepath=os.path.join(MODELS_PATH, "gbclassifier.pkl")):
+        """This method reads the model in the filepath.
+
+        Args:
+            filepath (str, optional): Defaults to os.path.join(MODELS_PATH, "gbclassifier.pkl").
+
+        Returns:
+            GradientBoostingClassifier: Returns a trained model.
+        """        
+        model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
+        return model
 
     def train_model(self, X_train, y_train, filepath=os.path.join(MODELS_PATH, "gbclassifier.pkl")):
         """
@@ -41,7 +55,7 @@ class ModelTraining:
         model
             Trained machine learning model.
         """
-        gbc = GradientBoostingClassifier(random_state=42)
+        gbc = GradientBoostingClassifier(random_state=config.RANDOM_STATE)
         parameters = {"n_estimators": (5, 10),
                     "learning_rate": (0.1, 0.01, 0.001),
                     "max_depth": [2, 3, 4],
