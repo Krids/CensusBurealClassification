@@ -1,0 +1,5 @@
+outs:
+- md5: ab11ea2f5f49e45bb5b8e9a2c319642b
+  size: 340
+  isexec: true
+  path: lb.pkl
