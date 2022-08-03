@@ -14,7 +14,7 @@ from fastapi import FastAPI, Body
 
 from src.utils.project_paths import MODELS_PATH, EXAMPLES_API_PATH
 from src.api.model import Person, FeatureInfo
-
+from src.etl.etl import Etl
 
 if "DYNO" in os.environ and os.path.isdir("../.dvc"):
     os.system("dvc config core.no_scm true")
@@ -31,6 +31,7 @@ app = FastAPI(
 model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 with open(EXAMPLES_API_PATH) as fp:
     examples = yaml.safe_load(fp)
+etl = Etl()
 
 
 @app.get("/")
@@ -53,8 +54,26 @@ async def predict(person: Person = Body(..., examples=examples['post_examples'])
                         for f in examples['features_info'].keys()]).reshape(1, -1)
     df = pd.DataFrame(features, columns=examples['features_info'].keys())
 
-    pred_label = int(model.predict(df))
-    pred_probs = float(model.predict_proba(df)[:, 1])
+    cat_features = [
+            "workclass",
+            "education",
+            "marital_status",
+            "occupation",
+            "relationship",
+            "race",
+            "sex",
+            "native_country",
+        ]
+
+    encoder = joblib.load(os.path.join(MODELS_PATH, 'encoder.pkl'))
+    lb = joblib.load(os.path.join(MODELS_PATH, 'lb.pkl'))
+
+    X, _, _, _ = etl.process_data(
+            df, categorical_features=cat_features, training=False, encoder=encoder , lb=lb
+        )
+
+    pred_label = int(model.predict(X))
+    pred_probs = float(model.predict_proba(X)[:, 1])
     pred = '>50k' if pred_label == 1 else '<=50k'
 
     return {'label': pred_label, 'prob': pred_probs, 'salary': pred}
