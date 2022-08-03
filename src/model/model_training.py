@@ -124,12 +124,14 @@ class ModelTraining:
             test, categorical_features=cat_features, label="salary", training=False, encoder=encoder, lb=lb
         )
         # Train and save a model.
+        log.info("___Train Data___")
         classifier = self.train_model(X_train, y_train)
         y_train_pred = self.inference(classifier, X_train)
         train_precision, train_recall, train_fbeta = self.compute_model_metrics(y_train, y_train_pred)
         log.info("train_precision: {train_precision}, train_recall: {train_recall}, train_fbeta: {train_fbeta}".format(
             train_precision=train_precision, train_recall=train_recall, train_fbeta=train_fbeta))
 
+        log.info("___Test Data___")
         y_test_pred = self.inference(classifier, X_test)
         test_precision, test_recall, test_fbeta = self.compute_model_metrics(y_test, y_test_pred)
         log.info("test_precision: {test_precision}, test_recall: {test_recall}, test_fbeta: {test_fbeta}".format(

@@ -14,10 +14,12 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, StandardScaler
 
-import config
-from pipeline.data import get_clean_data
-from pipeline.evaluate import compute_metrics
-from pipeline.model import get_model_pipeline, train_model, inference_model
+from src.utils import config
+from src.etl.etl import Etl
+from src.model.model_training import ModelTraining
+
+etl = Etl()
+model_training = ModelTraining()
 
 
 def test_model_pipeline():
@@ -37,9 +39,11 @@ def test_model_pipeline():
     assert isinstance(model_pipe[0].transformers[1][1][0],
                       SimpleImputer), "Second step: column transformer Pipeline != first step: SimpleImputer"
     assert (
-        isinstance(model_pipe[1], LogisticRegression) & isinstance(model_pipe[0].transformers[1][1][1], OneHotEncoder)
+        isinstance(model_pipe[1], LogisticRegression) & isinstance(
+            model_pipe[0].transformers[1][1][1], OneHotEncoder)
     ) or (
-        isinstance(model_pipe[1], RandomForestClassifier) & isinstance(model_pipe[0].transformers[1][1][1], OrdinalEncoder)
+        isinstance(model_pipe[1], RandomForestClassifier) & isinstance(
+            model_pipe[0].transformers[1][1][1], OrdinalEncoder)
     ), "Second step: column transformer Pipeline != second step: OHE for LogisticRegression or LE for RandomForestClassifier"
     assert model_pipe[0].transformers[1][2] == feats[
         'categorical'], f"{feats['categorical']} only should be included in column transformer second step"
@@ -59,10 +63,10 @@ def test_model_output_shape(sample_data: pd.DataFrame):
     X_train, X_test, y_train, _ = sample_data
     model = get_model_pipeline(config.MODEL, config.FEATURES)
 
-    model = train_model(model, X_train, y_train, {})
+    model = model_training.train_model(model, X_train, y_train, {})
 
-    y_train_pred = inference_model(model, X_train)
-    y_test_pred = inference_model(model, X_test)
+    y_train_pred = model_training.inference(model, X_train)
+    y_test_pred = model_training.inference(model, X_test)
 
     assert X_train.shape[
         1] == 14, f"Train data number of columns should be 14 not {X_train.shape[1]}"
@@ -83,10 +87,10 @@ def test_model_output_range(sample_data: pd.DataFrame):
     X_train, X_test, y_train, _ = sample_data
     model = get_model_pipeline(config.MODEL, config.FEATURES)
 
-    model = train_model(model, X_train, y_train, {})
+    model = model_training.train_model(model, X_train, y_train, {})
 
-    y_train_pred = inference_model(model, X_train)
-    y_test_pred = inference_model(model, X_test)
+    y_train_pred = model_training.inference(model, X_train)
+    y_test_pred = model_training.inference(model, X_test)
 
     assert (y_train_pred >= 0).all() & (y_train_pred <=
                                         1).all(), "Predictions output range is not from 0-1"
@@ -98,18 +102,20 @@ def test_model_evaluation():
     """
     Test evaluated model metrics are above certain thresholds
     """
-    X, y = get_clean_data(config.DATA_DIR)
+    X, y = etl.get_clean_data(config.DATA_DIR)
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.3, random_state=config.RANDOM_STATE, stratify=y)
 
     model = joblib.load(config.MODEL_DIR)
 
-    y_train_pred = inference_model(model, X_train)
-    y_test_pred = inference_model(model, X_test)
+    y_train_pred = model_training.inference(model, X_train)
+    y_test_pred = model_training.inference(model, X_test)
 
-    pre_train, rec_train, f1_train = compute_metrics(y_train_pred, y_train)
-    pre_test, rec_test, f1_test = compute_metrics(y_test_pred, y_test)
+    pre_train, rec_train, f1_train = model_training.compute_model_metrics(
+        y_train_pred, y_train)
+    pre_test, rec_test, f1_test = model_training.compute_model_metrics(
+        y_test_pred, y_test)
 
     assert pre_train > 0.7, "Train precision should be above 0.85"
     assert rec_train > 0.85, "Train recall should be above 0.85"
