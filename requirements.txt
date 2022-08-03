@@ -8,4 +8,4 @@ uvicorn
 gunicorn
 flake8
 great-expectations
-yaml
+pyyaml
