@@ -13,6 +13,7 @@ from src.api.app import app
 
 client = TestClient(app)
 
+
 def test_greetings():
     """
     Tests GET greetings function
@@ -21,6 +22,7 @@ def test_greetings():
     assert response.status_code == HTTPStatus.OK
     assert response.request.method == "GET"
     assert response.json() == 'Greetings everybody!!'
+
 
 @pytest.mark.parametrize('test_input, expected', [
     ('age', "Age of the person - numerical - int"),
@@ -82,7 +84,8 @@ def test_predict_status():
 
 def test_predict_response():
     """
-    Tests POST request response for predict function when successful against a sample
+    Tests POST request response for predict function
+    when successful against a sample
     """
     data = {
         'age': 38,

@@ -19,11 +19,13 @@ data = {
 }
 
 # GET request
-response = requests.get('https://census-project.herokuapp.com/feature_info/age')
+response = requests.get('https://census-project.herokuapp.com/\
+    feature_info/age')
 print(response.status_code)
 print(response.json())
 
 # POST request
-response = requests.post('https://census-project.herokuapp.com/predict/', auth=('user', 'pass'), json=data)
+response = requests.post('https://census-project.herokuapp.com\
+    /predict/', auth=('user', 'pass'), json=data)
 print(response.status_code)
 print(response.json())

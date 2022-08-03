@@ -13,8 +13,8 @@ TEST_SIZE = 0.3
 RANDOM_STATE = 17
 
 MODEL = RandomForestClassifier(
-   class_weight='balanced',
-   random_state=RANDOM_STATE)
+    class_weight='balanced',
+    random_state=RANDOM_STATE)
 
 PARAM_GRID = None
 if isinstance(MODEL, RandomForestClassifier):

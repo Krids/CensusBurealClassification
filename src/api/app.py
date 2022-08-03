@@ -28,7 +28,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 with open(EXAMPLES_API_PATH) as fp:
     examples = yaml.safe_load(fp)
 etl = Etl()
@@ -47,30 +46,34 @@ async def feature_info(feature_name: FeatureInfo):
 
 
 @app.post("/predict/")
-async def predict(person: Person = Body(..., examples=examples['post_examples'])):
+async def predict(person: Person =
+                  Body(..., examples=examples['post_examples'])):
 
     person = person.dict()
     features = np.array([person[f]
-                        for f in examples['features_info'].keys()]).reshape(1, -1)
-    df = pd.DataFrame(features, columns=examples['features_info'].keys())
+                        for f in examples['features_info\
+                            '].keys()]).reshape(1, -1)
+    df = pd.DataFrame(features, columns=examples['features_info\
+        '].keys())
 
     cat_features = [
-            "workclass",
-            "education",
-            "marital_status",
-            "occupation",
-            "relationship",
-            "race",
-            "sex",
-            "native_country",
-        ]
+        "workclass",
+        "education",
+        "marital_status",
+        "occupation",
+        "relationship",
+        "race",
+        "sex",
+        "native_country",
+    ]
 
     encoder = joblib.load(os.path.join(MODELS_PATH, 'encoder.pkl'))
     lb = joblib.load(os.path.join(MODELS_PATH, 'lb.pkl'))
+    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 
     X, _, _, _ = etl.process_data(
-            df, categorical_features=cat_features, training=False, encoder=encoder , lb=lb
-        )
+        df, categorical_features=cat_features,
+        training=False, encoder=encoder, lb=lb)
 
     pred_label = int(model.predict(X))
     pred_probs = float(model.predict_proba(X)[:, 1])

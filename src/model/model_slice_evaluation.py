@@ -1,12 +1,12 @@
 """
-This file is responsible for the evaluation of the model on slices of the dataframe.
+This file is responsible for the evaluation of
+the model on slices of the dataframe.
 
 Name: Felipe Lana Machado
 Date: 01/05/2022
 """
 
 import os
-import sys
 import logging as log
 import pandas as pd
 import seaborn as sns
@@ -18,15 +18,16 @@ from src.model.model_training import ModelTraining
 
 sns.set()
 
+
 class ModelSliceEvaluation:
 
     def __init__(self) -> None:
         self.model_training = ModelTraining()
         log.basicConfig(
-            filename= os.path.join(LOGS_PATH, 'slice_evalutation.log'),
+            filename=os.path.join(LOGS_PATH, 'slice_evalutation.log'),
             level=log.INFO,
             filemode='w',
-            format='%(name)s - %(levelname)s - %(message)s')
+            format='%(name)s-%(levelname)s-%(message)s')
 
     def slice_metrics(self, column, X, y_true, y_pred):
         """
@@ -44,12 +45,16 @@ class ModelSliceEvaluation:
 
         metrics = []
         for categ in df[column].unique():
-            precision, recall, fbeta = self.model_training.compute_model_metrics(
+            (precision,
+             recall,
+             fbeta) = self.model_training.compute_model_metrics(
                 df[df[column] == categ]['salary_pred'],
                 df[df[column] == categ]['salary']
             )
             metrics.append([categ, precision, recall, fbeta])
-            log.info(f"[INFO] {categ}: Precision = {precision:.3f}, Recall = {recall:.3f}, F-Beta = {fbeta:.3f}")
+            log.info(
+                f"[INFO] {categ}: Precision = {precision:.3f}, \
+                    Recall = {recall:.3f}, F-Beta = {fbeta:.3f}")
 
         return pd.DataFrame(
             metrics,
@@ -89,7 +94,6 @@ class ModelSliceEvaluation:
         print(slice_df.to_string(index=False), file=file)
         print("", file=file)
 
-
     def plot_slice_metrics(self, df, title, save_path=None):
         """
         Plots slice metrics in a bar plot using the dataframe from
@@ -101,7 +105,8 @@ class ModelSliceEvaluation:
         Returns:
             None
         """
-        df = df.melt(id_vars=['Category'], value_vars=['Precision', 'Recall', 'F1'])
+        df = df.melt(id_vars=['Category'], value_vars=[
+                     'Precision', 'Recall', 'F1'])
 
         plt.figure(figsize=(14, 6))
         ax = sns.barplot(x='variable', y='value', hue='Category', data=df)

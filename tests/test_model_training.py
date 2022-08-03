@@ -10,13 +10,13 @@ import joblib
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.utils import config
 from src.etl.etl import Etl
 from src.utils.project_paths import MODELS_PATH, DATA_RAW
 from src.model.model_training import ModelTraining
 
 etl = Etl()
 model_training = ModelTraining()
+
 
 def test_model_output_shape(sample_data: pd.DataFrame):
     """
@@ -32,13 +32,17 @@ def test_model_output_shape(sample_data: pd.DataFrame):
     y_test_pred = model_training.inference(model, X_test)
 
     assert X_train.shape[
-        1] == 108, f"Train data number of columns should be 108 not {X_train.shape[1]}"
+        1] == 108, f"Train data number of columns should be\
+             108 not {X_train.shape[1]}"
     assert X_test.shape[
-        1] == 108, f"Test data number of columns should be 108 not {X_test.shape[1]}"
+        1] == 108, f"Test data number of columns should be\
+             108 not {X_test.shape[1]}"
     assert y_train_pred.shape[0] == X_train.shape[
-        0], f"Predictions output shape {y_train_pred.shape[0]} is incorrect does not match input shape {X_train.shape[0]}"
+        0], f"Predictions output shape {y_train_pred.shape[0]} is \
+            incorrect does not match input shape {X_train.shape[0]}"
     assert y_test_pred.shape[0] == X_test.shape[
-        0], f"Predictions output shape {y_test_pred.shape[0]} is incorrect does not match input shape {X_test.shape[0]}"
+        0], f"Predictions output shape {y_test_pred.shape[0]} is \
+            incorrect does not match input shape {X_test.shape[0]}"
 
 
 def test_model_output_range(sample_data: pd.DataFrame):
@@ -49,14 +53,15 @@ def test_model_output_range(sample_data: pd.DataFrame):
     """
     X_train, X_test, y_train, _ = sample_data
 
-
-    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
+    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier\
+        .pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
 
     assert (y_train_pred >= 0).all() & (y_train_pred <=
-                                        1).all(), "Predictions output range is not from 0-1"
+                                        1).all(), "Predictions \
+                                            output range is not from 0-1"
     assert (y_test_pred >= 0).all() & (y_test_pred <= 1).all(
     ), "Predictions output range is not from 0-1"
 
@@ -68,28 +73,30 @@ def test_model_evaluation():
     X, y = etl.get_clean_data(os.path.join(DATA_RAW, 'census.csv'))
 
     cat_features = [
-            "workclass",
-            "education",
-            "marital_status",
-            "occupation",
-            "relationship",
-            "race",
-            "sex",
-            "native_country",
-        ]
-    
+        "workclass",
+        "education",
+        "marital_status",
+        "occupation",
+        "relationship",
+        "race",
+        "sex",
+        "native_country",
+    ]
+
     data = pd.concat([X, y], axis=1)
 
     train, test = train_test_split(data, test_size=0.3, random_state=12)
-    
+
     X_train, y_train, encoder, lb = etl.process_data(
-            train, categorical_features=cat_features, label="salary", training=True
-        )
+        train, categorical_features=cat_features, label="salary", training=True
+    )
 
     X_test, y_test, encoder, lb = etl.process_data(
-            test, categorical_features=cat_features, label="salary", training=False, encoder=encoder, lb=lb
-        )
-    
+        test, categorical_features=cat_features,
+        label="salary", training=False, encoder=encoder,
+        lb=lb
+    )
+
     model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
