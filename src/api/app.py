@@ -51,10 +51,10 @@ async def predict(person: Person =
 
     person = person.dict()
     features = np.array([person[f]
-                        for f in examples['features_info\
-                            '].keys()]).reshape(1, -1)
-    df = pd.DataFrame(features, columns=examples['features_info\
-        '].keys())
+                        for f in
+                        examples['features_info'].keys()]).reshape(1, -1)
+    df = pd.DataFrame(features,
+                      columns=examples['features_info'].keys())
 
     cat_features = [
         "workclass",

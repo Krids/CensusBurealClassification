@@ -32,8 +32,8 @@ class ModelTraining:
             format='%(name)s - %(levelname)s - %(message)s')
 
     def get_trained_model(self,
-                          filepath=os.path.join(MODELS_PATH, "gbclassifier\
-                            .pkl")):
+                          filepath=os.path.join(MODELS_PATH,
+                                                "gbclassifier.pkl")):
         """This method reads the model in the filepath.
 
         Args:
@@ -50,8 +50,8 @@ class ModelTraining:
     def train_model(self,
                     X_train,
                     y_train,
-                    filepath=os.path.join(MODELS_PATH, "gbclassifier\
-                        .pkl")):
+                    filepath=os.path.join(MODELS_PATH,
+                                          "gbclassifier.pkl")):
         """
         Trains a machine learning model and returns it.
         Inputs

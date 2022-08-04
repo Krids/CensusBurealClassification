@@ -26,7 +26,8 @@ def test_model_output_shape(sample_data: pd.DataFrame):
     """
     X_train, X_test, y_train, _ = sample_data
 
-    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
+    model = joblib.load(os.path.join(MODELS_PATH,
+                                     'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
@@ -53,8 +54,8 @@ def test_model_output_range(sample_data: pd.DataFrame):
     """
     X_train, X_test, y_train, _ = sample_data
 
-    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier\
-        .pkl'))
+    model = joblib.load(os.path.join(MODELS_PATH,
+                                     'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
@@ -97,7 +98,8 @@ def test_model_evaluation():
         lb=lb
     )
 
-    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
+    model = joblib.load(os.path.join(MODELS_PATH,
+                                     'gbclassifier.pkl'))
 
     y_train_pred = model_training.inference(model, X_train)
     y_test_pred = model_training.inference(model, X_test)
