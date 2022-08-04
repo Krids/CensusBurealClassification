@@ -9,7 +9,6 @@ Date: 01/05/2022
 import os
 import logging as log
 import pandas as pd
-import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.ensemble import GradientBoostingClassifier
@@ -44,7 +43,8 @@ class ModelTraining:
             GradientBoostingClassifier:
             Returns a trained model.
         """
-        model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
+        with open(filepath, 'rb') as file:
+            model = pickle.load(file)
         return model
 
     def train_model(self,

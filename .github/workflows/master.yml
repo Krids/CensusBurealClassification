@@ -29,7 +29,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi # If we have a requirements.txt, then install it
     - name: Lint with flake8
       run: |
-        flake8 . --count --show-source --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 src/. --count --show-source --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:

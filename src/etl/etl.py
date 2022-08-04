@@ -6,9 +6,13 @@ Name: Felipe Lana Machado
 Date: 01/05/2022
 """
 
+import os
+import pickle
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
+
+from src.utils.project_paths import MODELS_PATH
 
 
 class Etl:
@@ -111,6 +115,9 @@ class Etl:
             X_categorical = encoder.fit_transform(X_categorical)
             y = lb.fit_transform(y.values).ravel()
         else:
+            encoder = pickle.load(open(os.path.join(MODELS_PATH,
+                                                    'encoder.pkl'), 'rb'))
+            lb = pickle.load(open(os.path.join(MODELS_PATH, 'lb.pkl'), 'rb'))
             X_categorical = encoder.transform(X_categorical)
             try:
                 y = lb.transform(y.values).ravel()

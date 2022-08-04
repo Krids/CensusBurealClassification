@@ -1,28 +1,10 @@
-root - INFO - fbeta : 0.5334177547083644
-precision : 0.454711802378774
-recall : 0.8247593760371722
-root - INFO - fbeta : 0.5420974889217134
-precision : 0.4637742207245156
-recall : 0.8271975957926371
-root - INFO - fbeta : 0.5328333175100477
-precision : 0.4543959056845184
-recall : 0.8226340172071476
-root - INFO - fbeta : 0.5434746566394101
-precision : 0.46452702702702703
-recall : 0.8320726172465961
 root - INFO - ___Train Data___
-root - INFO - fbeta : 0.647840880546231
-precision : 0.8185726569217541
-recall : 0.45441527446300717
-root - INFO - train_precision: 0.8185726569217541, train_recall: 0.45441527446300717, train_fbeta: 0.647840880546231
+root - INFO - fbeta : 0.6508566221142164
+precision : 0.822419216471261
+recall : 0.45650793650793653
+root - INFO - train_precision: 0.822419216471261,                 train_recall: 0.45650793650793653,                 train_fbeta: 0.6508566221142164
 root - INFO - ___Test Data___
-root - INFO - fbeta : 0.665942931791516
-precision : 0.82847533632287
-recall : 0.47554697554697556
-root - INFO - test_precision: 0.82847533632287, test_recall: 0.47554697554697556, test_fbeta: 0.665942931791516
-root - INFO - fbeta : 0.5329283281547041
-precision : 0.45530981539023946
-recall : 0.8172572178477691
-root - INFO - fbeta : 0.544477801646382
-precision : 0.46621621621621623
-recall : 0.8282070517629407
+root - INFO - fbeta : 0.6432608037749135
+precision : 0.8080924855491329
+recall : 0.45419103313840153
+root - INFO - test_precision: 0.8080924855491329,             test_recall: 0.45419103313840153,                 test_fbeta: 0.6432608037749135

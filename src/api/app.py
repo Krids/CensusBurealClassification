@@ -7,14 +7,14 @@ Date: 01/08/2022
 
 import os
 import yaml
-import joblib
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI, Body
 
-from src.utils.project_paths import MODELS_PATH, EXAMPLES_API_PATH
+from src.utils.project_paths import EXAMPLES_API_PATH
 from src.api.model import Person, FeatureInfo
 from src.etl.etl import Etl
+from src.model.model_training import ModelTraining
 
 if "DYNO" in os.environ and os.path.isdir("../.dvc"):
     os.system("dvc config core.no_scm true")
@@ -67,15 +67,14 @@ async def predict(person: Person =
         "native_country",
     ]
 
-    encoder = joblib.load(os.path.join(MODELS_PATH, 'encoder.pkl'))
-    lb = joblib.load(os.path.join(MODELS_PATH, 'lb.pkl'))
-    model = joblib.load(os.path.join(MODELS_PATH, 'gbclassifier.pkl'))
+    model_training = ModelTraining()
+    model = model_training.get_trained_model()
 
     X, _, _, _ = etl.process_data(
         df, categorical_features=cat_features,
-        training=False, encoder=encoder, lb=lb)
+        training=False)
 
-    pred_label = int(model.predict(X))
+    pred_label = int(model_training.inference(model, X))
     pred_probs = float(model.predict_proba(X)[:, 1])
     pred = '>50k' if pred_label == 1 else '<=50k'
 
