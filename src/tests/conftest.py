@@ -53,10 +53,11 @@ def sample_data():
     columns = data_df.columns
     columns = [col.replace('-', '_') for col in columns]
     data_df.columns = columns
+    data_df.columns = data_df.columns.str.strip()
 
     # make all characters to be lowercase in string columns
     data_df = data_df.applymap(
-        lambda s: s.lower() if isinstance(s, str) else s)
+        lambda s: s.lower().strip() if isinstance(s, str) else s)
 
     data_df['salary'] = data_df['salary'].map({'>50k': 1, '<=50k': 0})
 

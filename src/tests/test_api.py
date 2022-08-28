@@ -21,7 +21,7 @@ def test_greetings():
     response = client.get('/')
     assert response.status_code == HTTPStatus.OK
     assert response.request.method == "GET"
-    assert response.json() == 'Greetings and salutations everybody'
+    assert response.json() == 'Census Bureal Classification'
 
 
 @pytest.mark.parametrize('test_input, expected', [

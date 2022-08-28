@@ -1,7 +1,8 @@
 """
+This script is responsible for the test functions for training model
+
 Author: Felipe Lana Machado
 Date: 01/08/2022
-This script is responsible for the test functions for training model
 """
 import joblib
 import pandas as pd
