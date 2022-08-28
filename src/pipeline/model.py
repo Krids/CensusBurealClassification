@@ -10,7 +10,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
 
