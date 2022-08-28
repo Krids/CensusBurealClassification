@@ -27,16 +27,19 @@ pip install -r requirements.txt
 
 ## Project Structure
 ```bash
-📦Deploying-a-ML-Model-on-Heroku-with-FastAPI
+📦Census Bureal Classification
  ┣ 
  ┣ 📂.github
  ┃ ┗ 📂workflows
  ┃ ┃ ┗ 📜main.yml           # Github Action yml file
  ┣ 📂data                   # Dataset folder
- ┣ 📂metrics                # Model metrics
- ┣ 📂models                 # Trained serialized models
+ ┃ ┣ 📂raw
+ ┃ ┗ 📂processed   
+ ┣ 📂docs      
+ ┃ ┣ 📂metrics                # Model metrics
+ ┃ ┣ 📂models                 # Trained serialized models
+ ┃ ┗ 📂plots                  # Saved figures
  ┣ 📂notebooks              # EDA notebook
- ┣ 📂plots                  # Saved figures
  ┣ 📂screenshots            # Screenshots needed for the project other resources
  ┣ 📂src                
  ┃ ┣ 📂app                  # FastAPI folder
@@ -52,7 +55,7 @@ pip install -r requirements.txt
  ┗ 📜requirements.txt       # Projects required dependencies
 ```
 ## Usage
-The config file contains ```MODEL``` variable with a choice of either ```LogisticRegression``` or ```RandomForestClassifier```. Each model with a set of parameters for the grid search ```PARAM_GRID```. You can your own model with the parameters needed. The ```SLICE_COLUMNS``` variable is responsible for the columns for slice evaluation.
+The config file contains ```MODEL``` variable with a  ```RandomForestClassifier```. The model with a set of parameters for the grid search ```PARAM_GRID```. You can your own model with the parameters needed. The ```SLICE_COLUMNS``` variable is responsible for the columns for slice evaluation.
 
 1- Start training
 ```bash
@@ -72,7 +75,7 @@ uvicorn app.api:app --reload
 http://127.0.0.1:8000/docs
 ```
 
-<img src="screenshots/example.PNG">
+<img src="screenshots/example.png">
 
 4- Testing the project
 ```bash
@@ -84,7 +87,7 @@ pytest -vv
 dvc dag
 ```
 
-<img src="screenshots/dvcdag.PNG">
+<img src="screenshots/dvc_dag.png">
 
 6- CI using github action will be triggered upon pushing to github
 ```bash

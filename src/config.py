@@ -8,7 +8,6 @@ Date: 01/08/2022
 import os
 import numpy as np
 from pathlib import Path
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
 TEST_SIZE = 0.3
@@ -25,10 +24,6 @@ if isinstance(MODEL, RandomForestClassifier):
         'model__n_estimators': list(range(50, 151, 25)),
         'model__max_depth': list(range(2, 11, 2)),
         'model__min_samples_leaf': list(range(1, 51, 5)),
-    }
-elif isinstance(MODEL, LogisticRegression):
-    PARAM_GRID = {
-        'model__C': np.linspace(0.1, 10, 3)
     }
 
 FEATURES = {

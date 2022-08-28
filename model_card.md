@@ -4,8 +4,7 @@
   
 ## Model Details
 - This classifier trained to predict whether an employer's  income exceeds $50K/year.
-- **Random Forest** and **Logistic Regression**, only **Random Forest** will be considered for evaluation since it shows better results.
-- Developed by me for the third project for Udacity's Machine Learning DevOps nanodegree, October 2021.
+- **Random Forest**
 
 <img src="screenshots/model_pipeline.PNG" width="400" height="200">
 
@@ -47,9 +46,9 @@
 All results shown are calculated for class 1 (>50K) using sklearn metrics
 |				|Train |Test   |
 |---------------|------|-------|
-|Precision		|0.715 |0.688  |
-|Recall         |0.903 |0.868  |
-|F1          	|0.592 |0.570  |
+|Precision		|0.717 |0.687  |
+|Recall         |0.907 |0.865  |
+|F1          	|0.593 |0.569  |
 
-<img src="plots/slice_metrics_sex_test.png" width="500" height="250">
-<img src="plots/slice_metrics_race_test.png" width="500" height="250">
+<img src="docs/plots/slice_metrics_sex_test.png" width="500" height="250">
+<img src="docs/plots/slice_metrics_race_test.png" width="500" height="250">
