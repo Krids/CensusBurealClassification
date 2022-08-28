@@ -5,7 +5,7 @@ fastapi
 flake8
 pandas
 pytest
-scikit-lea
+scikit-learn
 uvicorn
 great_expectations
 pandas-profiling
