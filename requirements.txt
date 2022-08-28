@@ -9,3 +9,4 @@ gunicorn
 flake8
 great-expectations
 pyyaml
+dvc-s3
