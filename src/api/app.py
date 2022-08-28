@@ -24,7 +24,7 @@ if "DYNO" in os.environ and os.path.isdir("../.dvc"):
 
 app = FastAPI(
     title="Census Bureal Classification",
-    description="Deploying a ML Model on Heroku with FastAPI",
+    description="Deploying a ML Model on Heroku with FastAPI.",
     version="1.0.0",
 )
 
