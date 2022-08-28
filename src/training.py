@@ -1,7 +1,8 @@
 """
+This script used for training, evaluting and saving the model
+
 Author: Felipe Lana Machado
 Date: 01/08/2022
-This script used for training, evaluting and saving the model
 """
 import sys
 import joblib

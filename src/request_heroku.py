@@ -1,3 +1,10 @@
+"""
+This script is responsible for the request on heroku server.
+
+Author: Felipe Lana Machado
+Date: 01/08/2022
+"""
+
 import requests
 
 

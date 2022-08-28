@@ -41,8 +41,6 @@ def get_model_pipeline(model, feats):
         encoder = OrdinalEncoder(
             handle_unknown='use_encoded_value',
             unknown_value=1000)
-    elif isinstance(model, LogisticRegression):
-        encoder = OneHotEncoder(handle_unknown='ignore')
 
     # categorical feature preprocessor
     categ_preproc = make_pipeline(
