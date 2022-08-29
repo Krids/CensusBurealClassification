@@ -100,14 +100,14 @@ git push
 
 8- Starting the app on Heroku
 
-<img src="screenshots/live_get.PNG">
+<img src="screenshots/live_get.png">
 
 9- Test deployment on Heroku, demo post request
 ```bash
 python request_heroku.py
 ```
 
-<img src="screenshots/live_post.PNG">
+<img src="screenshots/live_post.png">
 
 ## License
 Distributed under the [MIT](https://choosealicense.com/licenses/mit/) License. See ```LICENSE``` for more information.
