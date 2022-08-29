@@ -1,5 +1,5 @@
 ![CI](https://github.com/ibrahim-sheriff/Deploying-a-ML-Model-on-Heroku-with-FastAPI/actions/workflows/main.yml/badge.svg)
-# Deploying-a-ML-Model-on-Heroku-with-FastAPI
+# Census Bureal Classification
 The third project [ML DevOps Engineer Nanodegree](https://www.udacity.com/course/machine-learning-dev-ops-engineer-nanodegree--nd0821) by Udacity. Instructions are available in udacity's [repository](https://github.com/udacity/nd0821-c3-starter-code/tree/master/starter)
 
 ## Description
@@ -10,7 +10,7 @@ This project is part of Unit 4: Deploying a Scalable ML Pipeline in Production. 
 - AWS account with S3 bucket 
 - Github account to use Github Actions for CI
 - Heroku account for CD
-- Linux environment may be needed within windows through WSL
+- Linux environment may be needed within windows through WSL2
 
 In addition to the following CLI tools
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html)
