@@ -1,5 +1,5 @@
 """
-This script used for training, evaluting and saving the model
+This script used for training, evaluting and saving the model.
 
 Author: Felipe Lana Machado
 Date: 01/08/2022

@@ -1,7 +1,8 @@
 """
-Author: Felipe Lana Machado
-Date: 01/08/2022
 This script is responsible for schemas for fastapi app
+
+Author: Felipe Lana Machado
+Date: 28/08/2022
 """
 from enum import Enum
 from typing import Optional

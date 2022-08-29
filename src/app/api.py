@@ -1,7 +1,8 @@
 """
+This script is responsible for the fastapi and routing functions
+
 Author: Felipe Lana Machado
 Date: 01/08/2022
-This script is responsible for the fastapi and routing functions
 """
 import os
 import yaml

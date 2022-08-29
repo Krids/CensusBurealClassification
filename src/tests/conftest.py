@@ -1,7 +1,8 @@
 """
+This script is responsible for the conftest data used with pytest module
+
 Author: Felipe Lana Machado
 Date: 01/08/2022
-This script is responsible for the conftest data used with pytest module
 """
 import os
 import pytest

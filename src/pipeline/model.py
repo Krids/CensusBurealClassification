@@ -8,7 +8,6 @@ import sys
 import logging
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.pipeline import Pipeline, make_pipeline
@@ -24,14 +23,14 @@ def get_model_pipeline(model, feats):
     encoding, scaling and handling missing data
 
     Args:
-        model (sklearn model): sklearn model either RandomForestClassifier/LogisticRegression
+        model (sklearn model): sklearn model either RandomForestClassifier
         feats (dict): dict of features for each step of the pipeline check config.py
 
     Returns:
         model_pipe (sklearn pipeline/model): sklearn model or pipeline
     """
     try:
-        assert isinstance(model, (LogisticRegression, RandomForestClassifier))
+        assert isinstance(model, (RandomForestClassifier))
     except AssertionError as error:
         logging.error(
             "Model should be RandomForestClassifier or LogisticRegression %s",
