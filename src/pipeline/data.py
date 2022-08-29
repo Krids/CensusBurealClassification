@@ -4,10 +4,12 @@ This script is responsible for the function to fetch the data from local directo
 Author: Felipe Lana Machado
 Date: 01/08/2022
 """
+import os
 import pandas as pd
+import config
 
 
-def get_clean_data(path):
+def get_clean_data(path, save: bool = True):
     """
     Loads and cleans the data from a given path
     Args:
@@ -34,6 +36,9 @@ def get_clean_data(path):
 
     # map label salary to numbers
     data_df['salary'] = data_df['salary'].map({'>50k': 1, '<=50k': 0})
+
+    if save:
+        data_df.to_csv(os.path.join(config.__MAIN_DIR, 'data', 'processed', 'census_cleaned.csv'), index=False)
 
     y_df = data_df.pop('salary')
     x_df = data_df
