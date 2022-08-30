@@ -95,6 +95,40 @@ def test_predict_response():
         'salary'] == '<=50k'
 
 
+def test_predict_response_above():
+    """
+    Tests POST request response for predict function when successful against a sample
+    """
+    data = {
+        'age': 56,
+        'fnlgt': 22,
+        'education_num': 6,
+        'capital_gain': 15000,
+        'capital_loss': 0,
+        'hours_per_week': 60
+    }
+    response = client.post("/predict/", json=data)
+    assert response.json()['label'] == 1
+    assert response.json()['salary'] == '>50k'
+
+
+def test_predict_response_below():
+    """
+    Tests POST request response for predict function when successful against a sample
+    """
+    data = {
+        'age': 38,
+        'fnlgt': 15,
+        'education_num': 1,
+        'capital_gain': 0,
+        'capital_loss': 0,
+        'hours_per_week': 5
+    }
+    response = client.post("/predict/", json=data)
+    assert response.json()['label'] == 0
+    assert response.json()['salary'] == '<=50k'
+
+
 def test_missing_feature_predict():
     """
     Tests POST predict function when failed due to missing features
